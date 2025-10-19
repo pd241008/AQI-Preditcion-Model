@@ -172,16 +172,6 @@ Visit the app at **http://localhost:3000**
 
 ---
 
-## 🖼️ Screenshots  
-
-| Home Page | Prediction Result |
-|------------|------------------|
-| ![Home](https://github.com/pd241008/AQI-Preditcion-Model/assets/home-example.png) | ![Result](https://github.com/pd241008/AQI-Preditcion-Model/assets/result-example.png) |
-
-*(Replace with your actual screenshots)*
-
----
-
 ## 🤝 Contributing  
 Contributions are welcome!  
 To contribute:
