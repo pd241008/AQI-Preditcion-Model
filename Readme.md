@@ -1,8 +1,6 @@
 # 🌍 AQI Prediction Model  
 *An AI-powered web application for forecasting Air Quality Index (AQI) using real-time data and machine learning.*
 
-![Banner](https://github.com/pd241008/AQI-Preditcion-Model/assets/banner-example.png)
-
 ---
 
 ## 🧠 Overview  
