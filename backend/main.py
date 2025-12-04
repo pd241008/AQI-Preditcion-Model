@@ -6,10 +6,13 @@ import numpy as np
 
 app = FastAPI(title="AQI Prediction API")
 
-# Allow frontend (Next.js) requests
+# CORS (Add your HuggingFace domain later)
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000","http://127.0.0.1:3000"],
+    allow_origins=[
+        "http://localhost:3000",
+        "http://127.0.0.1:3000"
+    ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -24,7 +27,10 @@ except Exception as e:
     print("❌ Failed to load model:", e)
     model = None
 
-# Input schema
+
+# -----------------------------
+# Main API input schema
+# -----------------------------
 class AQIRequest(BaseModel):
     pm2_5: float
     pm10: float
@@ -34,7 +40,8 @@ class AQIRequest(BaseModel):
     so2: float
     o3: float
 
-# Compute category
+
+# Compute AQI category
 def compute_aqi_category(aqi: float) -> str:
     if aqi <= 50:
         return "Good"
@@ -49,9 +56,11 @@ def compute_aqi_category(aqi: float) -> str:
     else:
         return "Hazardous"
 
+
 @app.get("/")
 def home():
     return {"message": "AQI API running"}
+
 
 @app.post("/predict")
 def predict(data: AQIRequest):
@@ -60,18 +69,46 @@ def predict(data: AQIRequest):
 
     try:
         X = np.array([
-            data.pm2_5,
-            data.pm10,
-            data.no,
-            data.no2,
-            data.co,
-            data.so2,
-            data.o3
+            data.pm2_5, data.pm10, data.no, data.no2,
+            data.co, data.so2, data.o3
         ]).reshape(1, -1)
 
         aqi = float(model.predict(X)[0])
         category = compute_aqi_category(aqi)
-        return {"aqi": round(aqi, 2), "category": category}
 
+        return {"aqi": round(aqi, 2), "category": category}
     except Exception as e:
         raise HTTPException(status_code=400, detail=f"Prediction failed: {e}")
+
+
+# -----------------------------
+# Extra Test API input schema
+# -----------------------------
+class AQITestRequest(BaseModel):
+    pm2_5: float
+    pm10: float
+    so2: float
+    no2: float
+    co: float
+    o3: float
+    temperature: float
+    humidity: float
+
+
+@app.post("/test-predict")
+async def test_predict(data: AQITestRequest):
+    if not model:
+        raise HTTPException(status_code=500, detail="Model not loaded")
+
+    try:
+        features = np.array([
+            data.pm2_5, data.pm10, data.so2, data.no2,
+            data.co, data.o3, data.temperature, data.humidity
+        ]).reshape(1, -1)
+
+        predicted_aqi = model.predict(features)[0]
+        return {"aqi": float(predicted_aqi)}
+
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=f"Prediction error: {e}")
+
