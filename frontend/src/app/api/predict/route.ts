@@ -33,7 +33,7 @@ export async function POST(req: Request) {
     }
 
     // FIXED YOUR ENDPOINT HERE
-    const response = await fetch(`${FASTAPI_URL}/test-predict`, {
+    const response = await fetch(`${FASTAPI_URL}/predict`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(cleanData),
@@ -61,3 +61,4 @@ export async function POST(req: Request) {
     );
   }
 }
+
