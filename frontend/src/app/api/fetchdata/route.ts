@@ -12,33 +12,38 @@ export async function GET(req: Request) {
       );
     }
 
-    // 🔥 Load HF backend ENV
-    const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
+    // Read API URL from env
+    const BASE_URL = process.env.ML_BACKEND_URL;
 
-    if (!BACKEND_URL) {
+    if (!BASE_URL) {
       return NextResponse.json(
-        { error: "Missing NEXT_PUBLIC_BACKEND_URL in .env" },
+        { error: "ML_BACKEND_URL is not set in environment variables" },
         { status: 500 }
       );
     }
 
-    // 🔥 Call HuggingFace backend endpoint
-    const res = await fetch(`${BACKEND_URL}/fetchData?city=${city}`);
+    // Build external API URL
+    const externalUrl = `${BASE_URL}/fetchData?city=${encodeURIComponent(city)}`;
 
-    if (!res.ok) {
+    const response = await fetch(externalUrl);
+
+    if (!response.ok) {
       return NextResponse.json(
-        { error: "Failed to fetch pollutant data" },
-        { status: res.status }
+        { error: "Failed to fetch data from ML backend" },
+        { status: response.status }
       );
     }
 
-    const data = await res.json();
-    return NextResponse.json({ city, pollutants: data });
+    const data = await response.json();
 
-  } catch (error) {
-    console.error("❌ FetchData API Error:", error);
     return NextResponse.json(
-      { error: "Unexpected error while fetching data" },
+      { success: true, data },
+      { status: 200 }
+    );
+  } catch (error) {
+    console.error("API Error:", error);
+    return NextResponse.json(
+      { error: "Internal Server Error" },
       { status: 500 }
     );
   }
