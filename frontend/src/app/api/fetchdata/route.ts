@@ -1,66 +1,44 @@
 import { NextResponse } from "next/server";
 
 export async function GET(req: Request) {
-  const { searchParams } = new URL(req.url);
-  const city = searchParams.get("city");
-
-  if (!city) {
-    return NextResponse.json(
-      { error: "City name is required" },
-      { status: 400 }
-    );
-  }
-
   try {
-    const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
-    if (!GEMINI_API_KEY) {
+    const { searchParams } = new URL(req.url);
+    const city = searchParams.get("city");
+
+    if (!city) {
       return NextResponse.json(
-        { error: "Gemini API key missing" },
+        { error: "City name is required" },
+        { status: 400 }
+      );
+    }
+
+    // 🔥 Load HF backend ENV
+    const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
+
+    if (!BACKEND_URL) {
+      return NextResponse.json(
+        { error: "Missing NEXT_PUBLIC_BACKEND_URL in .env" },
         { status: 500 }
       );
     }
 
-    const prompt = `
-      Provide the latest air quality pollutant data for ${city}.
-      Include only numerical values for: pm2_5, pm10, no, no2, co, so2, o3.
-      Return strictly JSON:
-      {"pm2_5": value, "pm10": value, "no": value, "no2": value, "co": value, "so2": value, "o3": value}.
-    `;
+    // 🔥 Call HuggingFace backend endpoint
+    const res = await fetch(`${BACKEND_URL}/fetchData?city=${city}`);
 
-    const response = await fetch(
-      "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-lite:generateContent",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "x-goog-api-key": GEMINI_API_KEY,
-        },
-        body: JSON.stringify({
-          contents: [{ parts: [{ text: prompt }] }],
-        }),
-      }
-    );
-
-    const result = await response.json();
-    console.log("🌐 Gemini raw:", JSON.stringify(result, null, 2));
-
-    let text = result?.candidates?.[0]?.content?.parts?.[0]?.text || "";
-    text = text.replace(/```json/g, "").replace(/```/g, "").trim();
-
-    let pollutants;
-    try {
-      pollutants = JSON.parse(text);
-    } catch {
-      pollutants = { rawResponse: text };
+    if (!res.ok) {
+      return NextResponse.json(
+        { error: "Failed to fetch pollutant data" },
+        { status: res.status }
+      );
     }
 
-    console.log("🧪 Final pollutants:", pollutants);
+    const data = await res.json();
+    return NextResponse.json({ city, pollutants: data });
 
-    return NextResponse.json({ city, pollutants });
-  } catch (err) {
-    console.error("❌ Gemini Error:", err);
+  } catch (error) {
+    console.error("❌ FetchData API Error:", error);
     return NextResponse.json(
-      { error: "Gemini API request failed" },
+      { error: "Unexpected error while fetching data" },
       { status: 500 }
     );
   }
