@@ -5,15 +5,9 @@ export async function POST(req: Request) {
     const body = await req.json();
     const pollutants = body?.pollutants || body;
 
-    const API_URL = process.env.ML_BACKEND_URL;
+    const API_URL = process.env.ML_BACKEND_URL; // Optional: alternate backend URL
+    const HF_SPACE_URL = process.env.NEXT_PUBLIC_BASE_URL; // Huggingface backend
     const HF_TOKEN = process.env.HF_API_KEY;
-
-    if (!API_URL) {
-      return NextResponse.json(
-        { error: "ML_BACKEND_URL missing in environment variables" },
-        { status: 500 }
-      );
-    }
 
     if (!HF_TOKEN) {
       return NextResponse.json(
@@ -22,7 +16,10 @@ export async function POST(req: Request) {
       );
     }
 
-    const hfResponse = await fetch(API_URL, {
+    const finalBackendURL = API_URL || `${HF_SPACE_URL}/predict`;
+
+    // SEND TO BACKEND
+    const response = await fetch(finalBackendURL, {
       method: "POST",
       headers: {
         Authorization: `Bearer ${HF_TOKEN}`,
@@ -31,7 +28,7 @@ export async function POST(req: Request) {
       body: JSON.stringify(pollutants),
     });
 
-    const data = await hfResponse.json();
+    const data = await response.json();
     return NextResponse.json({ success: true, data });
   } catch (err) {
     return NextResponse.json(
