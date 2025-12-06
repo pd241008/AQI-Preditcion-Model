@@ -15,6 +15,7 @@ export async function POST(req: Request) {
       );
     }
 
+    // Send to backend correctly: /predict only
     const response = await fetch(`${API_URL}/predict`, {
       method: "POST",
       headers: {
@@ -25,8 +26,8 @@ export async function POST(req: Request) {
     });
 
     const data = await response.json();
-
     return NextResponse.json(data);
+
   } catch (err) {
     return NextResponse.json(
       { error: "Prediction failed", details: String(err) },
