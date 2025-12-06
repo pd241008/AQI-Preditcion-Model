@@ -21,10 +21,10 @@ export async function GET(req: Request) {
       );
     }
 
-    // 1) GET SYNTHETIC POLLUTANT DATA
+    // 1) GENERATE SYNTHETIC POLLUTANT DATA
     const prompt = `
 Generate synthetic pollutant data for the city "${city}".  
-Return only this JSON:
+Return ONLY this JSON exactly:
 {
   "pm2_5": number,
   "pm10": number,
@@ -52,16 +52,12 @@ Return only this JSON:
     const result = await geminiRes.json();
     let text = result?.candidates?.[0]?.content?.parts?.[0]?.text || "";
 
-    text = text
-      .replace(/```json/g, "")
-      .replace(/```/g, "")
-      .trim();
-
+    text = text.replace(/```json/g, "").replace(/```/g, "").trim();
     const pollutants = JSON.parse(text);
 
-    // 2) SEND TO ML BACKEND VIA NEXT.JS predict API
+    // 2) SEND DIRECTLY TO HUGGINGFACE BACKEND (NOT /api/predict)
     const predictRes = await fetch(
-      `${process.env.NEXT_PUBLIC_BASE_URL}/api/predict`,
+      `${process.env.NEXT_PUBLIC_BASE_URL}/predict`,
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },
