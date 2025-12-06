@@ -22,7 +22,7 @@ export async function GET(req: Request) {
       );
     }
 
-    // 1) Get synthetic pollutant data from Gemini
+    // PROMPT
     const prompt = `
 Generate synthetic pollutant data for the city "${city}".  
 Return only this JSON:
@@ -37,9 +37,9 @@ Return only this JSON:
 }
 `;
 
+    // GEMINI REQUEST
     const geminiRes = await fetch(
-      "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-lite:generateContent?key=" +
-        GEMINI_API_KEY,
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-lite:generateContent?key=${GEMINI_API_KEY}`,
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -58,38 +58,37 @@ Return only this JSON:
       .replace(/```/g, "")
       .trim();
 
-    let pollutants = {};
+    let pollutants;
     try {
       pollutants = JSON.parse(text);
     } catch (err) {
       return NextResponse.json(
-        { error: "Failed to parse Gemini response", llmRaw: text },
+        { error: "Failed to parse Gemini output", raw: text },
         { status: 500 }
       );
     }
 
-    // 2) Forward to prediction API
-    const predictRes = await fetch(
-      `${process.env.NEXT_PUBLIC_BASE_URL}/api/predict`,
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(pollutants),
-      }
-    );
+    // 2) SEND TO BACKEND PREDICT
+    const backendURL = process.env.NEXT_PUBLIC_BASE_URL; // FIXED
+
+    const predictRes = await fetch(`${backendURL}/predict`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(pollutants),
+    });
 
     const predictData = await predictRes.json();
 
     if (!predictRes.ok) {
       return NextResponse.json(
-        { error: "Prediction API failed", details: predictData },
+        { error: "Backend prediction failed", details: predictData },
         { status: 500 }
       );
     }
 
     return NextResponse.json({
       city,
-      generatedPollutants: pollutants,
+      pollutants,
       predictedAQI: predictData,
     });
   } catch (err) {
