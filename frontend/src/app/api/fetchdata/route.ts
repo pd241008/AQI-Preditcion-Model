@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import { NextResponse } from "next/server";
 
 export async function GET(req: Request) {
@@ -17,12 +16,12 @@ export async function GET(req: Request) {
 
     if (!GEMINI_API_KEY) {
       return NextResponse.json(
-        { error: "Missing GEMINI_API_KEY in env" },
+        { error: "Missing GEMINI_API_KEY" },
         { status: 500 }
       );
     }
 
-    // PROMPT
+    // 1) GET SYNTHETIC POLLUTANT DATA
     const prompt = `
 Generate synthetic pollutant data for the city "${city}".  
 Return only this JSON:
@@ -37,9 +36,9 @@ Return only this JSON:
 }
 `;
 
-    // GEMINI REQUEST
     const geminiRes = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-lite:generateContent?key=${GEMINI_API_KEY}`,
+      "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-lite:generateContent?key=" +
+        GEMINI_API_KEY,
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -58,38 +57,24 @@ Return only this JSON:
       .replace(/```/g, "")
       .trim();
 
-    let pollutants;
-    try {
-      pollutants = JSON.parse(text);
-    } catch (err) {
-      return NextResponse.json(
-        { error: "Failed to parse Gemini output", raw: text },
-        { status: 500 }
-      );
-    }
+    const pollutants = JSON.parse(text);
 
-    // 2) SEND TO BACKEND PREDICT
-    const backendURL = process.env.NEXT_PUBLIC_BASE_URL; // FIXED
+    // 2) SEND TO ML BACKEND VIA NEXT.JS predict API
+    const predictRes = await fetch(
+      `${process.env.NEXT_PUBLIC_BASE_URL}/api/predict`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(pollutants),
+      }
+    );
 
-    const predictRes = await fetch(`${backendURL}/predict`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(pollutants),
-    });
-
-    const predictData = await predictRes.json();
-
-    if (!predictRes.ok) {
-      return NextResponse.json(
-        { error: "Backend prediction failed", details: predictData },
-        { status: 500 }
-      );
-    }
+    const predicted = await predictRes.json();
 
     return NextResponse.json({
       city,
       pollutants,
-      predictedAQI: predictData,
+      predicted,
     });
   } catch (err) {
     return NextResponse.json(
