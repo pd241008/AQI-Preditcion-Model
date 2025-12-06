@@ -27,7 +27,7 @@ interface PredictionResponse {
 // --- End Interfaces ---
 
 export default function HomePage() {
-  const [city, setCity] = useState("Delhi");
+  const [city, setCity] = useState("");
   const [loading, setLoading] = useState(false);
   const [data, setData] = useState<FetchResponse | null>(null);
   const [prediction, setPrediction] = useState<PredictionResponse | null>(null);
