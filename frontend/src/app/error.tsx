@@ -1,3 +1,4 @@
+"use client"
 export default function ErrorPage() {
   return (
     <main className="min-h-screen flex flex-col items-center justify-center bg-white px-6">
