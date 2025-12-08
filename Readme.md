@@ -106,7 +106,7 @@ Used by the frontend to get the predicted AQI.
 }
 ```
 
-###🎨 Frontend (Next.js 14 + TailwindCSS)
+## 🎨 Frontend (Next.js 14 + TailwindCSS)
 
 The frontend provides a clean, modern, and mobile-first experience.
 
@@ -133,9 +133,9 @@ cd backend
 pip install -r requirements.txt
 ```
 # Run the API server
-# --reload enables auto-restart on code changes
-```uvicorn main:app --reload
-
+```
+--reload enables auto-restart on code changes
+uvicorn main:app --reload
 ```
 2. Frontend (Next.js)
 Bash
@@ -146,8 +146,8 @@ cd frontend
 # Install dependencies
 npm install
 ```
-# Run the Next.js development server
-# Access at http://localhost:3000
+ Run the Next.js development server
+ Access at http://localhost:3000
 
 ```npm run dev```
 🪵 Repository Structure
