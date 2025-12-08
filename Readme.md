@@ -104,3 +104,61 @@ Used by the frontend to get the predicted AQI.
   "co": 0.52,
   "o3": 21.4
 }
+```
+
+🎨 Frontend (Next.js 14 + TailwindCSS)
+The frontend provides a clean, modern, and mobile-first experience.
+
+Frontend Features
+Modern UI: Built with Next.js 14 and TailwindCSS.
+
+Serverless Proxy: Uses Next.js API Routes to safely handle the Gemini API key and orchestrate the request flow.
+
+Visualisation: Clear AQI category and numerical display.
+
+Dynamic Content: City-based imagery (via Unsplash proxy) and loading animations.
+
+🧪 Running Locally
+To set up and run the project components on your local machine:
+
+1. Backend (FastAPI)
+```Bash
+
+# Move to the backend directory
+cd backend
+```
+# Install dependencies
+```
+pip install -r requirements.txt
+```
+# Run the API server
+# --reload enables auto-restart on code changes
+```uvicorn main:app --reload
+
+```
+2. Frontend (Next.js)
+Bash
+```
+# Move to the frontend directory
+cd frontend
+
+# Install dependencies
+npm install
+```
+# Run the Next.js development server
+# Access at http://localhost:3000
+
+```npm run dev```
+🪵 Repository Structure
+Bash
+```
+📦 AQI-Prediction-Model
+├── frontend/             # Next.js 14 + Tailwind (Vercel deployment)
+│   ├── app/
+│   └── components/
+│
+├── backend/              # FastAPI ML Backend (Hugging Face Spaces deployment)
+│   ├── main.py
+│   ├── model.pkl         # Pre-trained DecisionTreeRegressor
+│   └── requirements.txt
+```
