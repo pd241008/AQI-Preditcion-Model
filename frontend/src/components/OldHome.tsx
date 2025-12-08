@@ -1,6 +1,5 @@
-
 "use client";
-/** eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 
 import { useState, useCallback } from "react";
 import { Loader2, Zap, Cloud, AlertTriangle, Search } from "lucide-react";
@@ -50,8 +49,9 @@ export default function OldHome() {
         aqi: Math.round(result.aqi),
         category: result.category,
       });
-    } catch (err: any) {
-      setError(err.message);
+    } catch (err: unknown) {
+      if (err instanceof Error) setError(err.message);
+      else setError("Unknown error occurred during prediction.");
     }
   }, []);
 
@@ -77,8 +77,9 @@ export default function OldHome() {
 
       setData(json);
       await handlePredict(json.pollutants);
-    } catch (err: any) {
-      setError(err.message);
+    } catch (err: unknown) {
+      if (err instanceof Error) setError(err.message);
+      else setError("Unknown error occurred while fetching data.");
       setData(null);
     } finally {
       setLoading(false);
@@ -88,47 +89,19 @@ export default function OldHome() {
   const getAQIStyle = (category: string) => {
     switch (category) {
       case "Good":
-        return {
-          color: "text-green-600",
-          bg: "bg-green-100",
-          ring: "ring-green-400",
-        };
+        return { color: "text-green-600", bg: "bg-green-100", ring: "ring-green-400" };
       case "Moderate":
-        return {
-          color: "text-yellow-600",
-          bg: "bg-yellow-100",
-          ring: "ring-yellow-400",
-        };
+        return { color: "text-yellow-600", bg: "bg-yellow-100", ring: "ring-yellow-400" };
       case "Unhealthy for Sensitive Groups":
-        return {
-          color: "text-orange-600",
-          bg: "bg-orange-100",
-          ring: "ring-orange-400",
-        };
+        return { color: "text-orange-600", bg: "bg-orange-100", ring: "ring-orange-400" };
       case "Unhealthy":
-        return {
-          color: "text-red-600",
-          bg: "bg-red-100",
-          ring: "ring-red-400",
-        };
+        return { color: "text-red-600", bg: "bg-red-100", ring: "ring-red-400" };
       case "Very Unhealthy":
-        return {
-          color: "text-purple-600",
-          bg: "bg-purple-100",
-          ring: "ring-purple-400",
-        };
+        return { color: "text-purple-600", bg: "bg-purple-100", ring: "ring-purple-400" };
       case "Hazardous":
-        return {
-          color: "text-rose-700",
-          bg: "bg-rose-100",
-          ring: "ring-rose-500",
-        };
+        return { color: "text-rose-700", bg: "bg-rose-100", ring: "ring-rose-500" };
       default:
-        return {
-          color: "text-gray-600",
-          bg: "bg-gray-100",
-          ring: "ring-gray-400",
-        };
+        return { color: "text-gray-600", bg: "bg-gray-100", ring: "ring-gray-400" };
     }
   };
 
@@ -173,7 +146,8 @@ export default function OldHome() {
           <button
             onClick={handleFetchData}
             disabled={loading}
-            className="flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-3 rounded-lg">
+            className="flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-3 rounded-lg"
+          >
             {loading ? (
               <>
                 <Loader2 className="w-5 h-5 animate-spin" /> Fetching...
@@ -203,23 +177,25 @@ export default function OldHome() {
               <div
                 className={`p-8 rounded-3xl shadow-2xl ${
                   getAQIStyle(prediction.category).bg
-                }`}>
+                }`}
+              >
                 <p className="text-xl font-medium">
-                  Predicted AQI for{" "}
-                  <span className="font-bold">{data?.city || city}</span>
+                  Predicted AQI for <span className="font-bold">{data?.city || city}</span>
                 </p>
 
                 <div
                   className={`relative w-48 h-48 mx-auto my-6 rounded-full border-8 ${
                     getAQIStyle(prediction.category).ring
-                  } flex items-center justify-center`}>
+                  } flex items-center justify-center`}
+                >
                   <div className="text-7xl font-black">{prediction.aqi}</div>
                 </div>
 
                 <div
                   className={`text-2xl font-bold text-center ${
                     getAQIStyle(prediction.category).color
-                  }`}>
+                  }`}
+                >
                   {prediction.category}
                 </div>
               </div>
