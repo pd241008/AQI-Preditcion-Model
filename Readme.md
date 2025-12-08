@@ -1,100 +1,106 @@
-🌫️ AQI Prediction System
+# 🌍 AI-Powered AQI Prediction System
 
-A full-stack Next.js + FastAPI + Machine Learning system that predicts Air Quality Index (AQI) using real-time pollutant values generated using Gemini AI and processed by a trained DecisionTreeRegressor ML model deployed on Hugging Face Spaces.
+## **_Real-Time Air Quality Estimation using ML, MLOps, Next.js, Gemini API & FastAPI_**
 
-This project features:
+<p align="center">
+  <img src="https://img.shields.io/badge/Frontend-Vercel-black?logo=vercel" />
+  <img src="https://img.shields.io/badge/Backend-HuggingFace-yellow?logo=huggingface" />
+  <img src="https://img.shields.io/badge/MLOps-Python%20%7C%20FastAPI-blue" />
+  <img src="https://img.shields.io/badge/Next.js-14-black?logo=next.js" />
+  <img src="https://img.shields.io/badge/Google-Gemini-blue?logo=google" />
+</p>
 
-✔️ A modern, animated Next.js UI
-✔️ A FastAPI backend hosted on Hugging Face Spaces
-✔️ A trained DecisionTreeRegressor using CPCB dataset
-✔️ Perfect integration between Gemini → Backend → Frontend
+| Component | Status / Link |
+| :--- | :--- |
+| **🚀 Live App** | [https://aqi-preditcion-model.vercel.app/](https://aqi-preditcion-model.vercel.app/) |
+| **⚙️ ML Backend (FastAPI)** | [https://huggingface.co/spaces/Flamzey/my-ml-backend](https://huggingface.co/spaces/Flamzey/my-ml-backend) |
+| **📘 Training Notebook** | _(Google Colab Used)_ |
+| **📊 Dataset** | CPCB - Central Pollution Control Board |
 
-🚀 Features
+---
 
-🔮 Real-time AQI Prediction using a trained ML model
+## 💡 Overview
 
-🤖 Gemini-powered pollutant value generation
+This project is a **full-stack, production-ready Air Quality Index (AQI) Prediction System** demonstrating a complete MLOps pipeline across multiple cloud platforms. It integrates a trained **DecisionTreeRegressor** model with a modern, high-performance web stack.
 
-☁️ FastAPI backend deployed on Hugging Face Spaces
+The system predicts the overall AQI based on six core pollutants: **PM2.5, PM10, NO₂, SO₂, CO, and O₃**.
 
-▲ Next.js frontend deployed on Vercel
+### ✨ Highlight Feature: Gemini API for Real-Time Data
 
-🎬 Dynamic UI with animated transitions & result screen
+Instead of relying on costly external APIs, the application uses the **Google Gemini API** as a creative proxy to **generate synthetic, real-time pollutant data** based on a user-provided city. This ensures the demo is live, dynamic, and cost-effective.
 
-🔐 Secure API routes inside Next.js
+---
 
-⚡ Instant ML inference (model loads on startup)
+## 🔗 Architecture & Data Flow
 
-🗂️ Project Structure
-├── frontend/                   # Next.js App Router (UI)
-│   ├── app/                    # Pages, components, API routes
-│   ├── public/                 # Static assets
-│   ├── styles/                 # Global styles
-│   └── package.json            # Dependencies
-│
-├── backend/                    # FastAPI ML backend (Hugging Face)
-│   ├── main.py                 # FastAPI app + prediction endpoint
-│   ├── model.pkl               # Trained DecisionTreeRegressor model
-│   ├── requirements.txt        # Backend dependencies
-│   └── README.md               # Backend documentation
-│
-└── README.md                   # Project documentation (this file)
+This project follows a complete **MLOps pipeline** utilizing a Serverless architecture (Vercel) and a containerized ML inference service (Hugging Face Spaces).
 
-🛠️ Tech Stack (Frontend)
-Next.js 14
 
-App Router
 
-Server Actions
+The flow is as follows:
 
-SSR Rendering
+1.  **User Input** (City Name) on the **Next.js Frontend**.
+2.  **Next.js API Route** calls **Google Gemini** with a prompt (e.g., "Generate pollutant levels for Delhi...").
+3.  **Gemini** returns the synthetic pollutant values.
+4.  **Next.js** sends the pollutant payload to the **FastAPI Backend**.
+5.  **FastAPI** loads the pre-trained **DecisionTreeRegressor** model.
+6.  **FastAPI** computes the **AQI** and **Category**.
+7.  The final result is displayed on the **Next.js UI**.
 
-TailwindCSS
+---
 
-Fully utility-first styling
+## 🧠 Machine Learning Pipeline
 
-TypeScript
+### 📌 Model & Training
 
-Strict type-safety
+| Detail | Description |
+| :--- | :--- |
+| **Algorithm** | **DecisionTreeRegressor** |
+| **Dataset** | CPCB Pollutant Data (cleaned) |
+| **Key Features** | PM2.5, PM10, SO₂, NO₂, CO, O₃ |
+| **Training Tool** | Google Colab |
+| **Export Format** | `model.pkl` |
 
-📦 Installation & Setup
-1️⃣ Clone the Repository
-git clone https://github.com/yourusername/aqi-prediction-system.git
-cd aqi-prediction-system
+### 🎯 Why Decision Tree?
 
-2️⃣ Install Frontend Dependencies
-cd frontend
-npm install
+* **Fast Inference:** Extremely quick prediction time, ideal for a **zero-latency** serverless/edge deployment.
+* **Lightweight:** Small file size, reducing cold-start time.
+* **Interpretability:** High transparency in how AQI is calculated from pollutants.
 
-3️⃣ Run the Dev Server
-npm run dev
+---
 
-4️⃣ Visit in Browser
-http://localhost:3000
+## ⚙ Backend Service (FastAPI)
 
-🌐 API Overview
+The backend is a high-performance **FastAPI** service deployed on **Hugging Face Spaces**.
 
-Your backend includes an exposed prediction API for AQI.
+### Key Features
+* **High-Performance:** Utilizes FastAPI for speed and asynchronous operations.
+* **Zero Latency:** The `model.pkl` is loaded **once** at service startup, resulting in near-zero latency for subsequent prediction requests.
+* **Robustness:** **Pydantic validation** ensures a clean, expected request payload.
+* **Deployment:** Dockerized and served on Hugging Face Spaces.
 
-Endpoint
-POST /predict
+### `/predict` Endpoint
 
-Body Example
+Used by the frontend to get the predicted AQI.
+
+**Method:** `POST`
+
+| Parameter | Type | Example | Description |
+| :--- | :--- | :--- | :--- |
+| **pm2_5** | `float` | `87.1` | Particulate matter $< 2.5 \mu m$ |
+| **pm10** | `float` | `122.5` | Particulate matter $< 10 \mu m$ |
+| **so2** | `float` | `18.0` | Sulfur Dioxide |
+| **no2** | `float` | `34.7` | Nitrogen Dioxide |
+| **co** | `float` | `0.52` | Carbon Monoxide |
+| **o3** | `float` | `21.4` | Ozone |
+
+**Example Request:**
+```json
 {
-  "pm2_5": 55,
-  "pm10": 120,
-  "so2": 8,
-  "no2": 22,
-  "co": 0.7,
-  "o3": 31
+  "pm2_5": 87.1,
+  "pm10": 122.5,
+  "so2": 18.0,
+  "no2": 34.7,
+  "co": 0.52,
+  "o3": 21.4
 }
-
-Response
-{
-  "predicted_aqi": 142,
-  "category": "Unhealthy for Sensitive Groups"
-}
-
-📜 License
-
-This project is licensed under the MIT License — free to use and modify.
