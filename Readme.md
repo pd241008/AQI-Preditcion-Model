@@ -1,41 +1,208 @@
-🌍 AI-Powered AQI Prediction SystemReal-Time Air Quality Estimation using ML, MLOps, Next.js, Gemini API & FastAPI<p align="center"><img src="https://img.shields.io/badge/Frontend-Vercel-black?logo=vercel" /><img src="https://img.shields.io/badge/Backend-HuggingFace-yellow?logo=huggingface" /><img src="https://img.shields.io/badge/MLOps-Python%20%7C%20FastAPI-blue" /><img src="https://img.shields.io/badge/Next.js-14-black?logo=next.js" /><img src="https://img.shields.io/badge/Google-Gemini-blue?logo=google" /></p>ComponentStatus / Link🚀 Live Apphttps://aqi-preditcion-model.vercel.app/⚙️ ML Backend (FastAPI)https://huggingface.co/spaces/Flamzey/my-ml-backend📘 Training Notebook(Google Colab Used)📊 DatasetCPCB - Central Pollution Control Board💡 OverviewThis project is a full-stack, production-ready Air Quality Index (AQI) Prediction System demonstrating a complete MLOps pipeline across multiple cloud platforms. It integrates a trained DecisionTreeRegressor model with a modern, high-performance web stack.The system predicts the overall AQI based on six core pollutants: PM2.5, PM10, NO₂, SO₂, CO, and O₃.✨ Highlight Feature: Gemini API for Real-Time DataInstead of relying on costly external APIs, the application uses the Google Gemini API as a creative proxy to generate synthetic, real-time pollutant data based on a user-provided city. This ensures the demo is live, dynamic, and cost-effective.🔗 Architecture & Data FlowThis project follows a complete MLOps pipeline utilizing a Serverless architecture (Vercel) and a containerized ML inference service (Hugging Face Spaces).The flow is as follows:User Input (City Name) on the Next.js Frontend.Next.js API Route calls Google Gemini with a prompt (e.g., "Generate pollutant levels for Delhi...").Gemini returns the synthetic pollutant values.Next.js sends the pollutant payload to the FastAPI Backend.FastAPI loads the pre-trained DecisionTreeRegressor model.FastAPI computes the AQI and Category.The final result is displayed on the Next.js UI.🧠 Machine Learning Pipeline📌 Model & TrainingDetailDescriptionAlgorithmDecisionTreeRegressorDatasetCPCB Pollutant Data (cleaned)Key FeaturesPM2.5, PM10, SO₂, NO₂, CO, O₃Training ToolGoogle ColabExport Formatmodel.pkl🎯 Why Decision Tree?Fast Inference: Extremely quick prediction time, ideal for a zero-latency serverless/edge deployment.Lightweight: Small file size, reducing cold-start time.Interpretability: High transparency in how AQI is calculated from pollutants.⚙ Backend Service (FastAPI)The backend is a high-performance FastAPI service deployed on Hugging Face Spaces.Key FeaturesHigh-Performance: Utilizes FastAPI for speed and asynchronous operations.Zero Latency: The model.pkl is loaded once at service startup, resulting in near-zero latency for subsequent prediction requests.Robustness: Pydantic validation ensures a clean, expected request payload.Deployment: Dockerized and served on Hugging Face Spaces./predict EndpointUsed by the frontend to get the predicted AQI.Method: POSTParameterTypeExampleDescriptionpm2_5float87.1Particulate matter $\lt 2.5 \mu m$pm10float122.5Particulate matter $\lt 10 \mu m$so2float18.0Sulfur Dioxideno2float34.7Nitrogen Dioxidecofloat0.52Carbon Monoxideo3float21.4OzoneExample Request:JSON{
-  "pm2_5": 87.1,
-  "pm10": 122.5,
-  "so2": 18.0,
-  "no2": 34.7,
-  "co": 0.52,
-  "o3": 21.4
+🌫️ AQI Prediction Backend — FastAPI + ML Model
+High-Performance ML Inference API deployed on Hugging Face Spaces
+
+This Space hosts the backend inference server for the AI-Powered AQI Prediction System.
+It serves a trained machine learning model that predicts Air Quality Index (AQI) based on six pollutant values.
+
+The backend is built using:
+
+⚡ FastAPI (high-performance async API framework)
+
+🧠 DecisionTreeRegressor (trained on CPCB dataset)
+
+🛡 Pydantic for request validation
+
+📡 CORS enabled for integration with Vercel + Next.js frontend
+
+🚀 Model loaded at startup → ultra-fast predictions
+
+Frontend Repo: https://github.com/pd241008/AQI-Preditcion-Model
+
+Frontend Live App: https://aqi-preditcion-model.vercel.app/
+
+📌 1. API Overview
+
+This backend exposes a single public endpoint:
+
+POST /predict
+
+
+It accepts pollutant concentrations and returns:
+
+Predicted AQI value
+
+AQI category (Good, Satisfactory, Moderate, Poor, Very Poor, Severe)
+
+The endpoint is used by the Next.js serverless backend to display results in the UI.
+
+📥 2. Request Format
+POST /predict
+Request Body (JSON)
+{
+  "pm2_5": 82.3,
+  "pm10": 115.2,
+  "so2": 19.4,
+  "no2": 32.1,
+  "co": 0.45,
+  "o3": 21.8
 }
-Example Response:JSON{
-  "aqi": 162,
+
+Field Description
+Pollutant	Unit	Example	Description
+pm2_5	µg/m³	82.3	Fine particulate matter
+pm10	µg/m³	115.2	Coarse particulate matter
+so2	µg/m³	19.4	Sulfur Dioxide
+no2	µg/m³	32.1	Nitrogen Dioxide
+co	mg/m³	0.45	Carbon Monoxide
+o3	µg/m³	21.8	Ground-level Ozone
+
+Pydantic automatically validates types and structural correctness.
+
+📤 3. Response Format
+Successful Response (200)
+{
+  "aqi": 164,
   "category": "Moderate"
 }
-🎨 Frontend (Next.js 14 + TailwindCSS)The frontend provides a clean, modern, and mobile-first experience.Frontend FeaturesModern UI: Built with Next.js 14 and TailwindCSS.Serverless Proxy: Uses Next.js API Routes to safely handle the Gemini API key and orchestrate the request flow.Visualisation: Clear AQI category and numerical display.Dynamic Content: City-based imagery (via Unsplash proxy) and loading animations.🧪 Running LocallyTo set up and run the project components on your local machine:1. Backend (FastAPI)Bash# Move to the backend directory
-cd backend
 
-# Install dependencies
+Fields
+Field	Description
+aqi	Predicted AQI value calculated by the model
+category	Air quality classification (Govt. AQI scale)
+⚠️ 4. Error Handling
+Invalid Request Body (422)
+{
+  "detail": [
+    {
+      "loc": ["body", "pm2_5"],
+      "msg": "value is not a valid float",
+      "type": "type_error.float"
+    }
+  ]
+}
+
+Model or Internal Error (500)
+{
+  "error": "Model failed to predict"
+}
+
+🧠 5. Model Details
+Property	Description
+Algorithm	DecisionTreeRegressor
+Training Notebook	Google Colab
+Dataset	CPCB (Central Pollution Control Board)
+Exported Model	model.pkl
+Preprocessing	Scaling, NaN cleaning, feature selection
+Input Features	PM2.5, PM10, SO2, NO2, CO, O3
+
+The model is loaded once at app startup:
+
+with open("model.pkl", "rb") as f:
+    model = pickle.load(f)
+
+
+This ensures instant predictions (no repeated disk I/O).
+
+🧪 6. Testing the API
+Using cURL
+curl -X POST https://<your-space-url>/predict \
+-H "Content-Type: application/json" \
+-d '{
+  "pm2_5": 80,
+  "pm10": 110,
+  "so2": 14,
+  "no2": 30,
+  "co": 0.5,
+  "o3": 21
+}'
+
+Using JavaScript (fetch)
+const res = await fetch("https://<your-space>/predict", {
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify({
+    pm2_5: 75,
+    pm10: 105,
+    so2: 12,
+    no2: 26,
+    co: 0.48,
+    o3: 20
+  })
+});
+
+const data = await res.json();
+console.log(data);
+
+Using Python
+import requests
+
+payload = {
+    "pm2_5": 88,
+    "pm10": 120,
+    "so2": 18,
+    "no2": 35,
+    "co": 0.52,
+    "o3": 22
+}
+
+r = requests.post("https://<your-space>/predict", json=payload)
+print(r.json())
+
+🔧 7. Running Locally
+Install dependencies
 pip install -r requirements.txt
 
-# Run the API server
-# --reload enables auto-restart on code changes
-uvicorn main:app --reload
-2. Frontend (Next.js)Bash# Move to the frontend directory
-cd frontend
+Start FastAPI server
+uvicorn main:app --host 0.0.0.0 --port 7860
 
-# Install dependencies
-npm install
+Local docs available at:
+http://localhost:7860/docs
+http://localhost:7860/redoc
 
-# Run the Next.js development server
-# Access at http://localhost:3000
-npm run dev
-🪵 Repository StructureBash📦 AQI-Prediction-Model
-├── frontend/             # Next.js 14 + Tailwind (Vercel deployment)
-│   ├── app/
-│   └── components/
-│
-├── backend/              # FastAPI ML Backend (Hugging Face Spaces deployment)
-│   ├── main.py
-│   ├── model.pkl         # Pre-trained DecisionTreeRegressor
-│   └── requirements.txt
-│
-└── notebooks/            # Jupyter/Colab notebooks for model training & analysis
+🌐 8. Frontend Integration
+
+This backend powers the AQI Prediction App deployed on Vercel.
+
+Frontend URL:
+👉 https://aqi-preditcion-model.vercel.app/
+
+The frontend uses a Next.js API Route, which in turn:
+
+Calls Google Gemini → generates pollutant data
+
+Sends pollutants to this backend → gets AQI prediction
+
+Displays results in UI
+
+This keeps API keys secure and ensures a clean architecture.
+
+🚀 9. Deployment Notes (For Maintainers)
+
+Running on Hugging Face Spaces (Docker environment)
+
+Model must be stored as:
+
+/code/model.pkl
+
+
+HF automatically installs dependencies from requirements.txt
+
+App exposed on port 7860
+
+Entry point must be named:
+
+app = FastAPI(...)
+
+
+To restart Space:
+➡️ "Restart this Space"
+
+To update:
+➡️ Commit → HF auto-deploys
+
+🏁 10. Contact / Issues
+
+If you encounter problems or want to contribute:
+🛠 GitHub Issues: https://github.com/pd241008/AQI-Preditcion-Model/issues
+
+📩 Developer: Prathmesh Desai (Flamzey)
