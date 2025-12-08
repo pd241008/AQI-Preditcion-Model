@@ -1,208 +1,41 @@
-# 🌍 AQI Prediction Model  
-*An AI-powered web application for forecasting Air Quality Index (AQI) using real-time data and machine learning.*
-
----
-
-## 🧠 Overview  
-The **AQI Prediction Model** predicts the Air Quality Index based on pollutant concentrations using a trained ML model.  
-It combines a **Flask (Python)** backend for prediction logic with a **Next.js (React + TypeScript)** frontend for a sleek, responsive interface.
-
-This project aims to increase environmental awareness by providing actionable insights on air quality in cities worldwide.
-
----
-
-## 🚀 Features  
-✅ Predict AQI based on pollutant inputs (PM2.5, PM10, NO₂, SO₂, CO, O₃)  
-✅ Real-time integration with AQICN API *(optional)*  
-✅ Interactive and minimalistic UI built with **Next.js + Tailwind CSS**  
-✅ Machine Learning backend (Flask + scikit-learn / TensorFlow)  
-✅ Fully responsive with dynamic result visualization  
-✅ Easy deployment on **Vercel** (frontend) and **Render / Railway / AWS / Heroku** (backend)
-
----
-
-## 🏗️ Project Structure  
-```
-AQI-Preditcion-Model/
-│
-├── backend/                 # Flask backend + ML model
-│   ├── app.py               # API routes
-│   ├── model/               # Trained ML model files (.pkl / .h5 / .json)
-│   ├── requirements.txt     # Python dependencies
-│   └── utils/               # Helper scripts (preprocessing, evaluation)
-│
-├── frontend/                # Next.js + Tailwind frontend
-│   ├── pages/               # Next.js pages
-│   ├── components/          # Reusable UI components
-│   ├── public/              # Static assets
-│   ├── package.json
-│   └── tailwind.config.js
-│
-└── README.md
-```
-
----
-
-## 🛠 Installation Guide
-
-### 1️⃣ Clone the Repository
-```bash
-git clone https://github.com/pd241008/AQI-Preditcion-Model.git
-cd AQI-Preditcion-Model
-```
-
----
-
-### 2️⃣ Backend Setup (Flask + Python)
-```bash
+🌍 AI-Powered AQI Prediction SystemReal-Time Air Quality Estimation using ML, MLOps, Next.js, Gemini API & FastAPI<p align="center"><img src="https://img.shields.io/badge/Frontend-Vercel-black?logo=vercel" /><img src="https://img.shields.io/badge/Backend-HuggingFace-yellow?logo=huggingface" /><img src="https://img.shields.io/badge/MLOps-Python%20%7C%20FastAPI-blue" /><img src="https://img.shields.io/badge/Next.js-14-black?logo=next.js" /><img src="https://img.shields.io/badge/Google-Gemini-blue?logo=google" /></p>ComponentStatus / Link🚀 Live Apphttps://aqi-preditcion-model.vercel.app/⚙️ ML Backend (FastAPI)https://huggingface.co/spaces/Flamzey/my-ml-backend📘 Training Notebook(Google Colab Used)📊 DatasetCPCB - Central Pollution Control Board💡 OverviewThis project is a full-stack, production-ready Air Quality Index (AQI) Prediction System demonstrating a complete MLOps pipeline across multiple cloud platforms. It integrates a trained DecisionTreeRegressor model with a modern, high-performance web stack.The system predicts the overall AQI based on six core pollutants: PM2.5, PM10, NO₂, SO₂, CO, and O₃.✨ Highlight Feature: Gemini API for Real-Time DataInstead of relying on costly external APIs, the application uses the Google Gemini API as a creative proxy to generate synthetic, real-time pollutant data based on a user-provided city. This ensures the demo is live, dynamic, and cost-effective.🔗 Architecture & Data FlowThis project follows a complete MLOps pipeline utilizing a Serverless architecture (Vercel) and a containerized ML inference service (Hugging Face Spaces).The flow is as follows:User Input (City Name) on the Next.js Frontend.Next.js API Route calls Google Gemini with a prompt (e.g., "Generate pollutant levels for Delhi...").Gemini returns the synthetic pollutant values.Next.js sends the pollutant payload to the FastAPI Backend.FastAPI loads the pre-trained DecisionTreeRegressor model.FastAPI computes the AQI and Category.The final result is displayed on the Next.js UI.🧠 Machine Learning Pipeline📌 Model & TrainingDetailDescriptionAlgorithmDecisionTreeRegressorDatasetCPCB Pollutant Data (cleaned)Key FeaturesPM2.5, PM10, SO₂, NO₂, CO, O₃Training ToolGoogle ColabExport Formatmodel.pkl🎯 Why Decision Tree?Fast Inference: Extremely quick prediction time, ideal for a zero-latency serverless/edge deployment.Lightweight: Small file size, reducing cold-start time.Interpretability: High transparency in how AQI is calculated from pollutants.⚙ Backend Service (FastAPI)The backend is a high-performance FastAPI service deployed on Hugging Face Spaces.Key FeaturesHigh-Performance: Utilizes FastAPI for speed and asynchronous operations.Zero Latency: The model.pkl is loaded once at service startup, resulting in near-zero latency for subsequent prediction requests.Robustness: Pydantic validation ensures a clean, expected request payload.Deployment: Dockerized and served on Hugging Face Spaces./predict EndpointUsed by the frontend to get the predicted AQI.Method: POSTParameterTypeExampleDescriptionpm2_5float87.1Particulate matter $\lt 2.5 \mu m$pm10float122.5Particulate matter $\lt 10 \mu m$so2float18.0Sulfur Dioxideno2float34.7Nitrogen Dioxidecofloat0.52Carbon Monoxideo3float21.4OzoneExample Request:JSON{
+  "pm2_5": 87.1,
+  "pm10": 122.5,
+  "so2": 18.0,
+  "no2": 34.7,
+  "co": 0.52,
+  "o3": 21.4
+}
+Example Response:JSON{
+  "aqi": 162,
+  "category": "Moderate"
+}
+🎨 Frontend (Next.js 14 + TailwindCSS)The frontend provides a clean, modern, and mobile-first experience.Frontend FeaturesModern UI: Built with Next.js 14 and TailwindCSS.Serverless Proxy: Uses Next.js API Routes to safely handle the Gemini API key and orchestrate the request flow.Visualisation: Clear AQI category and numerical display.Dynamic Content: City-based imagery (via Unsplash proxy) and loading animations.🧪 Running LocallyTo set up and run the project components on your local machine:1. Backend (FastAPI)Bash# Move to the backend directory
 cd backend
-python3 -m venv venv
-source venv/bin/activate      # Windows: venv\Scripts\activate
+
+# Install dependencies
 pip install -r requirements.txt
-```
 
-#### 🔧 Environment Variables  
-Create a `.env` file in the backend directory:
-```
-FLASK_APP=app.py
-FLASK_ENV=development
-MODEL_PATH=./model/aqi_model.pkl
-PORT=5000
-```
+# Run the API server
+# --reload enables auto-restart on code changes
+uvicorn main:app --reload
+2. Frontend (Next.js)Bash# Move to the frontend directory
+cd frontend
 
-#### ▶️ Run the Backend
-```bash
-python app.py
-# or
-flask run --port=5000
-```
-
-Your backend API will be available at **http://localhost:5000**
-
----
-
-### 3️⃣ Frontend Setup (Next.js + Tailwind)
-```bash
-cd ../frontend
+# Install dependencies
 npm install
-```
 
-#### 🔧 Environment Variables  
-Create a `.env.local` file in the `frontend` directory:
-```
-NEXT_PUBLIC_API_URL=http://localhost:5000
-```
-
-#### ▶️ Run the Frontend
-```bash
+# Run the Next.js development server
+# Access at http://localhost:3000
 npm run dev
-```
-
-Visit the app at **http://localhost:3000**
-
----
-
-## 🧬 API Usage  
-**Endpoint:** `POST /predict`  
-**Request Body:**
-```json
-{
-  "pm2_5": 35.6,
-  "pm10": 78.1,
-  "no2": 45.3,
-  "so2": 12.0,
-  "co": 0.8,
-  "o3": 60.2
-}
-```
-**Response:**
-```json
-{
-  "predicted_aqi": 118,
-  "category": "Unhealthy for Sensitive Groups"
-}
-```
-
----
-
-## 🧠 Model Details  
-- **Framework:** Scikit-learn / TensorFlow  
-- **Algorithm:** Random Forest Regressor  
-- **Input Features:** PM2.5, PM10, NO₂, SO₂, CO, O₃  
-- **Output:** AQI value and classification (Good, Moderate, Unhealthy, etc.)  
-- **Dataset:** Trained using AQICN + public government AQI datasets
-
----
-
-## 🧩 Technologies Used  
-| Layer | Technology |
-|-------|-------------|
-| Frontend | Next.js, React, Tailwind CSS |
-| Backend | Flask, Python |
-| ML Model | Scikit-learn / TensorFlow |
-| Data | AQICN / Kaggle AQI datasets |
-| Deployment | Vercel (frontend), Render / Railway (backend) |
-
----
-
-## 🧭 Deployment Guide
-
-### 🧱 Backend (Flask)
-1. Push your backend code to GitHub.
-2. Use **Render**, **Railway**, or **Heroku** for free hosting.
-3. Set environment variables (`MODEL_PATH`, `PORT`, etc.).
-4. Deploy.
-
-### 🌐 Frontend (Next.js)
-1. Push your frontend code to GitHub.
-2. Import the repo into **Vercel**.
-3. Add environment variable:
-   ```
-   NEXT_PUBLIC_API_URL=https://<your-backend-url>
-   ```
-4. Deploy — done! 🎉
-
----
-
-## 📊 Example Workflow  
-1. Enter pollutant values manually or fetch real-time data.  
-2. Click **Predict AQI**.  
-3. The backend processes the input → returns predicted AQI.  
-4. The frontend displays category, health info, and visualization.
-
----
-
-## 🤝 Contributing  
-Contributions are welcome!  
-To contribute:
-1. Fork the repo  
-2. Create a new branch (`feature/new-idea`)  
-3. Commit changes  
-4. Open a Pull Request 🎯
-
----
-
-## 📜 License  
-This project is licensed under the **MIT License**.  
-© 2025 Prathmesh Desai
-
----
-
-## 📬 Contact  
-**Author:** Prathmesh Desai  
-📧 Email: your.email@example.com  
-🌐 GitHub: [@pd241008](https://github.com/pd241008)
-
----
-
-## 🌱 Roadmap  
-- [ ] Integrate real-time AQI data from AQICN API  
-- [ ] Add historical AQI trend graphs  
-- [ ] Include Google Maps for location-based AQI  
-- [ ] Deploy backend to cloud for global access  
-- [ ] Improve model accuracy with meteorological data  
-
----
-
-⭐ **If you find this project helpful, please give it a star on GitHub!**  
-Every ⭐ motivates further open-source work 🌿
+🪵 Repository StructureBash📦 AQI-Prediction-Model
+├── frontend/             # Next.js 14 + Tailwind (Vercel deployment)
+│   ├── app/
+│   └── components/
+│
+├── backend/              # FastAPI ML Backend (Hugging Face Spaces deployment)
+│   ├── main.py
+│   ├── model.pkl         # Pre-trained DecisionTreeRegressor
+│   └── requirements.txt
+│
+└── notebooks/            # Jupyter/Colab notebooks for model training & analysis
