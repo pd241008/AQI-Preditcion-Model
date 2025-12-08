@@ -1,139 +1,100 @@
 🌫️ AQI Prediction System
 
-A full-stack Next.js + FastAPI + Machine Learning application that predicts Air Quality Index (AQI) using real pollutant data generated via Gemini AI and processed by a trained ML model deployed on Hugging Face.
+A full-stack Next.js + FastAPI + Machine Learning system that predicts Air Quality Index (AQI) using real-time pollutant values generated using Gemini AI and processed by a trained DecisionTreeRegressor ML model deployed on Hugging Face Spaces.
 
-The project includes:
-✔ A modern, animated Next.js UI
-✔ A FastAPI backend hosted on Hugging Face Spaces
-✔ A DecisionTreeRegressor ML model trained with CPCB data
-✔ API routes that connect Gemini → Backend → Frontend seamlessly
+This project features:
+
+✔️ A modern, animated Next.js UI
+✔️ A FastAPI backend hosted on Hugging Face Spaces
+✔️ A trained DecisionTreeRegressor using CPCB dataset
+✔️ Perfect integration between Gemini → Backend → Frontend
 
 🚀 Features
 
-📡 Real-time AQI prediction using a trained ML model
+🔮 Real-time AQI Prediction using a trained ML model
 
-🤖 Gemini-powered pollutant data generation
+🤖 Gemini-powered pollutant value generation
 
-🌐 FastAPI backend deployed on Hugging Face Spaces
+☁️ FastAPI backend deployed on Hugging Face Spaces
 
-⚛️ Next.js frontend deployed on Vercel
+▲ Next.js frontend deployed on Vercel
 
-🎨 Dynamic UI with animated result screens
+🎬 Dynamic UI with animated transitions & result screen
 
-🔒 Secure server-side API handling in Next.js
+🔐 Secure API routes inside Next.js
 
-⚡ Instant ML inference (model loaded at startup)
+⚡ Instant ML inference (model loads on startup)
 
-📂 Project Structure
-├── frontend/                 # Next.js App Router (UI)
-│   ├── app/                  # Pages, components, API routes
-│   ├── public/               # Static assets
-│   ├── styles/               # Global styles
-│   └── package.json
+🗂️ Project Structure
+├── frontend/                   # Next.js App Router (UI)
+│   ├── app/                    # Pages, components, API routes
+│   ├── public/                 # Static assets
+│   ├── styles/                 # Global styles
+│   └── package.json            # Dependencies
 │
-├── backend/                  # FastAPI ML backend (Hugging Face)
-│   ├── main.py               # FastAPI app + prediction endpoint
-│   ├── model.pkl             # Trained DecisionTreeRegressor model
-│   ├── requirements.txt
-│   └── README.md             # Backend documentation
+├── backend/                    # FastAPI ML backend (Hugging Face)
+│   ├── main.py                 # FastAPI app + prediction endpoint
+│   ├── model.pkl               # Trained DecisionTreeRegressor model
+│   ├── requirements.txt        # Backend dependencies
+│   └── README.md               # Backend documentation
 │
-└── README.md                 # Project documentation (this file)
+└── README.md                   # Project documentation (this file)
 
-🛠️ Tech Stack
-Frontend
+🛠️ Tech Stack (Frontend)
+Next.js 14
 
-Next.js 14 – App Router, SSR & server actions
+App Router
 
-TailwindCSS – Utility-first styling
+Server Actions
 
-TypeScript – Type safety
+SSR Rendering
 
-Vercel – Deployment platform
+TailwindCSS
 
-Backend
+Fully utility-first styling
 
-FastAPI – High-performance backend for ML inference
+TypeScript
 
-Pydantic – Request validation
-
-scikit-learn – DecisionTreeRegressor model
-
-Hugging Face Spaces – Backend deployment
+Strict type-safety
 
 📦 Installation & Setup
-1. Clone the repository
-git clone https://github.com/pd241008/AQI-Preditcion-Model.git
-cd AQI-Preditcion-Model
+1️⃣ Clone the Repository
+git clone https://github.com/yourusername/aqi-prediction-system.git
+cd aqi-prediction-system
 
-🔧 Frontend Setup
-2. Install dependencies
+2️⃣ Install Frontend Dependencies
+cd frontend
 npm install
 
-3. Run the development server
+3️⃣ Run the Dev Server
 npm run dev
 
-4. View in browser
+4️⃣ Visit in Browser
 http://localhost:3000
 
-⚙️ Backend (FastAPI) Setup
-Install dependencies
-pip install -r requirements.txt
+🌐 API Overview
 
-Run backend locally
-uvicorn main:app --host 0.0.0.0 --port 7860
+Your backend includes an exposed prediction API for AQI.
 
-API docs available at
-http://localhost:7860/docs
-
-🌐 API Usage
-
-The backend exposes a simple prediction API used by the frontend and external clients.
-
-📌 Endpoint:
-
+Endpoint
 POST /predict
 
-Request Body
+Body Example
 {
-  "pm2_5": 82.3,
-  "pm10": 115.2,
-  "so2": 19.4,
-  "no2": 32.1,
-  "co": 0.45,
-  "o3": 21.8
+  "pm2_5": 55,
+  "pm10": 120,
+  "so2": 8,
+  "no2": 22,
+  "co": 0.7,
+  "o3": 31
 }
 
-Response Example
+Response
 {
-  "aqi": 164,
-  "category": "Moderate"
+  "predicted_aqi": 142,
+  "category": "Unhealthy for Sensitive Groups"
 }
-
-🧠 Machine Learning Model
-
-Algorithm: DecisionTreeRegressor
-
-Dataset: CPCB pollutant dataset
-
-Trained in Google Colab
-
-Exported as model.pkl
-
-Loaded into memory at startup for instant predictions
-
-🚀 Live Deployments
-🌐 Frontend (Next.js – Vercel)
-
-🔗 https://aqi-preditcion-model.vercel.app/
-
-🧠 Backend (FastAPI – Hugging Face Spaces)
-
-🔗 https://flamzey-my-ml-backend.hf.space/
-
-📘 Training Notebook (Google Colab)
-
-🔗 https://colab.research.google.com/drive/1yRokjOy6-zvB4cbnNrYgXtAqx6cWlcyx
 
 📜 License
 
-This project is licensed under the MIT License.
+This project is licensed under the MIT License — free to use and modify.
