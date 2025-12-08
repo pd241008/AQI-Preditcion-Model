@@ -1,8 +1,9 @@
 "use client";
-/* eslint-disable @typescript-eslint/no-explicit-any */
+
 
 import { useState, useCallback } from "react";
 import { Loader2, Zap, Cloud, AlertTriangle, Search } from "lucide-react";
+import { useRouter } from "next/navigation"; // Added for navigation
 
 // --- Interfaces ---
 interface Pollutants {
@@ -27,6 +28,7 @@ interface PredictionResponse {
 // --- End Interfaces ---
 
 export default function OldHome() {
+  const router = useRouter(); // <-- Added
   const [city, setCity] = useState("");
   const [loading, setLoading] = useState(false);
   const [data, setData] = useState<FetchResponse | null>(null);
@@ -74,6 +76,22 @@ export default function OldHome() {
 
       if (!res.ok)
         throw new Error(json.error || `Failed to fetch data for "${city}"`);
+
+      // --- City validation check ---
+      const p = json.pollutants;
+      const allZero =
+        p.pm2_5 === 0 &&
+        p.pm10 === 0 &&
+        p.no === 0 &&
+        p.no2 === 0 &&
+        p.co === 0 &&
+        p.so2 === 0 &&
+        p.o3 === 0;
+
+      if (allZero) {
+        router.push("/error"); // Redirect if city is invalid
+        return;
+      }
 
       setData(json);
       await handlePredict(json.pollutants);
@@ -175,26 +193,24 @@ export default function OldHome() {
           <div className="lg:col-span-2">
             {prediction && (
               <div
-                className={`p-8 rounded-3xl shadow-2xl ${
-                  getAQIStyle(prediction.category).bg
-                }`}
+                className={`p-8 rounded-3xl shadow-2xl ${getAQIStyle(prediction.category).bg}`}
               >
                 <p className="text-xl font-medium">
                   Predicted AQI for <span className="font-bold">{data?.city || city}</span>
                 </p>
 
                 <div
-                  className={`relative w-48 h-48 mx-auto my-6 rounded-full border-8 ${
-                    getAQIStyle(prediction.category).ring
-                  } flex items-center justify-center`}
+                  className={`relative w-48 h-48 mx-auto my-6 rounded-full border-8 ${getAQIStyle(
+                    prediction.category
+                  ).ring} flex items-center justify-center`}
                 >
                   <div className="text-7xl font-black">{prediction.aqi}</div>
                 </div>
 
                 <div
-                  className={`text-2xl font-bold text-center ${
-                    getAQIStyle(prediction.category).color
-                  }`}
+                  className={`text-2xl font-bold text-center ${getAQIStyle(
+                    prediction.category
+                  ).color}`}
                 >
                   {prediction.category}
                 </div>
