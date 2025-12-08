@@ -1,4 +1,7 @@
-"use client"
+"use client";
+
+import Link from "next/link";
+
 export default function ErrorPage() {
   return (
     <main className="min-h-screen flex flex-col items-center justify-center bg-white px-6">
@@ -8,12 +11,12 @@ export default function ErrorPage() {
           The city you entered does not exist or could not be found.
         </p>
 
-        <a
+        <Link
           href="/"
           className="mt-4 inline-block bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-semibold"
         >
           Go Back
-        </a>
+        </Link>
       </div>
     </main>
   );
