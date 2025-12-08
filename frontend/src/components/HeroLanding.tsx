@@ -62,4 +62,46 @@ export default function HeroLanding() {
       {/* Feature Highlights */}
       <div className="mt-20 grid md:grid-cols-3 gap-6 max-w-5xl w-full">
 
-        <mot
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.1 }}
+          className="p-6 rounded-2xl bg-white/60 backdrop-blur-md border border-neutral-200 shadow-md"
+        >
+          <Sparkles className="h-8 w-8 text-blue-600 mb-3" />
+          <h3 className="font-semibold text-lg mb-2">Gemini-Powered Data</h3>
+          <p className="text-neutral-600 text-sm">
+            Pollutant values generated intelligently through Google Gemini AI.
+          </p>
+        </motion.div>
+
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.2 }}
+          className="p-6 rounded-2xl bg-white/60 backdrop-blur-md border border-neutral-200 shadow-md"
+        >
+          <CloudSun className="h-8 w-8 text-blue-600 mb-3" />
+          <h3 className="font-semibold text-lg mb-2">FastAPI Backend</h3>
+          <p className="text-neutral-600 text-sm">
+            Deployed on HuggingFace Spaces for fast ML inference.
+          </p>
+        </motion.div>
+
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.3 }}
+          className="p-6 rounded-2xl bg-white/60 backdrop-blur-md border border-neutral-200 shadow-md"
+        >
+          <Gauge className="h-8 w-8 text-blue-600 mb-3" />
+          <h3 className="font-semibold text-lg mb-2">Instant Predictions</h3>
+          <p className="text-neutral-600 text-sm">
+            Model loads once at startup for lightning-fast results.
+          </p>
+        </motion.div>
+
+      </div>
+    </div>
+  );
+}
