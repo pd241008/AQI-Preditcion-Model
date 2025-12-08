@@ -106,7 +106,8 @@ Used by the frontend to get the predicted AQI.
 }
 ```
 
-🎨 Frontend (Next.js 14 + TailwindCSS)
+###🎨 Frontend (Next.js 14 + TailwindCSS)
+
 The frontend provides a clean, modern, and mobile-first experience.
 
 Frontend Features
